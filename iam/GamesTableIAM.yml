@@ -1,0 +1,15 @@
+GamesTableIAM:
+  Effect: Allow
+  Action:
+    - dynamodb:Query
+    - dynamodb:Scan
+    - dynamodb:GetItem
+    - dynamodb:PutItem
+    - dynamodb:UpdateItem
+    - dynamodb:DeleteItem
+  Resource:
+    - ${self:custom.GamesTable.arn}
+    - !Join [
+        "/",
+        ["${self:custom.GamesTable.arn}"],
+      ]

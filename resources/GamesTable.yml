@@ -1,0 +1,24 @@
+GamesTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: GamesTable-${self:custom.stack_name}
+    BillingMode: PAY_PER_REQUEST
+    AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: platform
+        AttributeType: S
+      - AttributeName: boughtAt
+        AttributeType: S
+    KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+    GlobalSecondaryIndexes:
+      - IndexName: platformAndBoughtDate
+        KeySchema:
+          - AttributeName: platform
+            KeyType: HASH
+          - AttributeName: boughtAt
+            KeyType: RANGE
+        Projection:
+          ProjectionType: ALL

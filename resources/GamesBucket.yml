@@ -1,0 +1,17 @@
+GamesBucket:
+  Type: "AWS::S3::Bucket"
+  DeletionPolicy: Delete
+  Properties:
+    BucketName: ${self:custom.GamesBucket.name}
+    CorsConfiguration:
+      CorsRules:
+        - AllowedHeaders:
+            - "content-type"
+          AllowedMethods:
+            - GET
+            - PUT
+          AllowedOrigins:
+            - "https://nabusim.duckdns.org/"
+            - "http://localhost:4200"
+          Id: myCORSRuleId1
+          MaxAge: 3600

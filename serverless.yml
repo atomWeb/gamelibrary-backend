@@ -1,0 +1,67 @@
+service: gamelibrary-service
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    REGION: ${self:custom.region}
+    GAMES_TABLE: ${self:custom.GamesTable.name}    
+    GAMES_BUCKET: ${self:custom.GamesBucket.name}
+  iam:
+    role:
+      statements:
+        - ${file(iam/GamesTableIAM.yml):GamesTableIAM}
+        - ${file(iam/GamesBucketIAM.yml):GamesBucketIAM}
+        # Allow Lambda to write logs to CloudWatch
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Resource: arn:aws:logs:*:*:*        
+
+resources:
+  Resources:
+    GamesTable: ${file(resources/GamesTable.yml):GamesTable}    
+    GamesBucket: ${file(resources/GamesBucket.yml):GamesBucket}
+
+functions:
+  createGame:
+    handler: src/handlers/creategame.handler
+    events:
+      - http:
+          method: POST
+          path: /game
+          cors: true
+          authorizer: ${self:custom.authorizer}
+
+  getGames:
+    handler: src/handlers/getgames.handler
+    events:
+      - http:
+          method: GET
+          path: /games
+          cors: true          
+
+  getGame:
+    handler: src/handlers/getgame.handler
+    events:
+      - http:
+          method: GET
+          path: /game/{id}
+          cors: true
+          authorizer: ${self:custom.authorizer}
+
+custom:
+  app_acronym: vgameslib
+  region: ${opt:region, self:provider.region}
+  authorizer: arn:aws:lambda:${self:custom.region}:${aws:accountId}:function:auth-service-${self:provider.stage}-auth    
+  stack_name: ${self:custom.app_acronym}-${self:provider.stage}  
+  GamesTable:
+    name: !Ref GamesTable
+    arn: !GetAtt GamesTable.Arn
+  GamesBucket:
+    name: games-${self:custom.stack_name}
