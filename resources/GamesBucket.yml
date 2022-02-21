@@ -11,7 +11,7 @@ GamesBucket:
             - GET
             - PUT
           AllowedOrigins:
-            - "https://nabusim.duckdns.org/"
+            - "https://nabugames.duckdns.org/"
             - "http://localhost:4200"
           Id: myCORSRuleId1
           MaxAge: 3600

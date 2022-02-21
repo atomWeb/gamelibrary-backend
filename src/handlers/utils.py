@@ -21,7 +21,8 @@ def get_str_timestamp():
 def jsonify(obj, statusCode=200):
     return {
         'headers': {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
         },
         'statusCode': statusCode,
         'body': json.dumps(obj, cls=DecimalEncoder)

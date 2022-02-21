@@ -1,6 +1,6 @@
 # Video Game Library: Serverless Framework Template
 
-https://nabusim.duckdns.org/
+https://nabugames.duckdns.org/
 
 ## Descripción:
 Este backend serverless, da soporte al proyecto [Game Library](https://github.com/atomWeb/game-library), el cual es una librería personal de videojuegos que está desarrollado en Angular y con propósitos únicamente didácticos.
