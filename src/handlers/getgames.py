@@ -3,11 +3,13 @@ import boto3
 import os
 from src.handlers.utils import jsonify
 
+BUCKET = os.environ["GAMES_BUCKET"]
 REGION = os.environ["REGION"]
 GAMES_TABLE = os.environ["GAMES_TABLE"]
 
 dynamo_resource = boto3.resource("dynamodb", region_name=REGION)
 games_table = dynamo_resource.Table(GAMES_TABLE)
+s3_client = boto3.client("s3", region_name=REGION)
 
 def handler(event, context):
 
@@ -19,6 +21,20 @@ def handler(event, context):
 
         response = games_table.scan()
         items = response.get('Items', [])
+
+        j = 0
+        for item in items:
+            url_item = item.get('imageUrl')
+            url = s3_client.generate_presigned_url(
+                ClientMethod='get_object',
+                Params={
+                    'Bucket': BUCKET,
+                    'Key': url_item
+                }
+            )
+            items[j]["imageUrl"] = url
+            j = j + 1
+
 
     except Exception as e:
         msg_error = "An exception occurred " + str(e) + "."
