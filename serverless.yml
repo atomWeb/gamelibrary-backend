@@ -25,8 +25,7 @@ provider:
 
 resources:
   Resources:
-    GamesTable: ${file(resources/GamesTable.yml):GamesTable}    
-    GamesBucket: ${file(resources/GamesBucket.yml):GamesBucket}
+    GamesTable: ${file(resources/GamesTable.yml):GamesTable}
 
 functions:
   createGame:
@@ -59,9 +58,9 @@ custom:
   app_acronym: vgameslib
   region: ${opt:region, self:provider.region}
   authorizer: arn:aws:lambda:${self:custom.region}:${aws:accountId}:function:auth-service-${self:provider.stage}-auth    
-  stack_name: ${self:custom.app_acronym}-${self:provider.stage}  
+  stack_name: ${self:custom.app_acronym}-${self:provider.stage}
   GamesTable:
     name: !Ref GamesTable
     arn: !GetAtt GamesTable.Arn
   GamesBucket:
-    name: games-${self:custom.stack_name}
+    name: timg-vgameslib-${self:provider.stage}

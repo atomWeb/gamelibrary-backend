@@ -40,6 +40,7 @@ def handler(event, context):
         idxb = imageextension.index(';')
         extension = imageextension[idxa+1:idxb]
         file_name = game_id + "." + extension
+        timg = "timg/" + game_id + "_timg.png"
 
         string_image = image_base64[idx+1:]
         obj = s3.Object(BUCKET, file_name)
@@ -51,9 +52,10 @@ def handler(event, context):
                 "id": game_id,
                 "platform": platform,
                 "boughtAt": boughtAt,
-                "name": name,
+                "gname": name,
                 "description": description,
-                "imageUrl": file_name,
+                "image": file_name,
+                "timg": timg,
                 "createAt": get_str_timestamp()
             }
         )

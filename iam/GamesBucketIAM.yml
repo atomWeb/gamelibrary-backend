@@ -3,6 +3,4 @@ GamesBucketIAM:
   Action:
     - s3:PutObject
     - s3:GetObject
-    - s3:GetBucketLocation
-    - s3:ListAllMyBuckets
   Resource: arn:aws:s3:::${self:custom.GamesBucket.name}/*

@@ -18,13 +18,15 @@ def handler(event, context):
     status_code=200
     
     try:
-
-        response = games_table.scan()
+        scan_kwargs = {            
+            'ProjectionExpression': "platform, gname, description, timg"            
+        }
+        response = games_table.scan(**scan_kwargs)
         items = response.get('Items', [])
 
         j = 0
         for item in items:
-            url_item = item.get('imageUrl')
+            url_item = item.get('timg')
             url = s3_client.generate_presigned_url(
                 ClientMethod='get_object',
                 Params={
@@ -32,7 +34,7 @@ def handler(event, context):
                     'Key': url_item
                 }
             )
-            items[j]["imageUrl"] = url
+            items[j]["timg"] = url
             j = j + 1
 
 
