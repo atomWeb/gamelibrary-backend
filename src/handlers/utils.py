@@ -13,9 +13,12 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 
-def get_str_timestamp():
+def now_str_timestamp():
     now = datetime.now()
     return now.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+def set_str_timestamp(objDate):    
+    return objDate.strftime("%Y-%m-%d %H:%M:%S.%f")
 
 
 def jsonify(obj, statusCode=200):

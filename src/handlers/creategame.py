@@ -3,7 +3,7 @@ import base64
 import boto3
 import os
 import uuid
-from src.handlers.utils import jsonify, get_str_timestamp
+from src.handlers.utils import jsonify, now_str_timestamp
 
 BUCKET = os.environ["GAMES_BUCKET"]
 REGION = os.environ["REGION"]
@@ -27,9 +27,9 @@ def handler(event, context):
         data = json.loads(event["body"])
         platform = data["platform"]
         boughtAt = data["boughtAt"]
-        name = data["name"]
+        name = data["gameName"]
         description = data["description"]
-        image_base64 = data["base64Image"]
+        image_base64 = data["encoded64Image"]
 
         game_id = str(uuid.uuid4())
 
@@ -56,7 +56,7 @@ def handler(event, context):
                 "description": description,
                 "image": file_name,
                 "timg": timg,
-                "createAt": get_str_timestamp()
+                "createAt": now_str_timestamp()
             }
         )
         print("Dynamo Response: ", response)
