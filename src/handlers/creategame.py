@@ -25,6 +25,7 @@ def handler(event, context):
     try:
         # Datos de la ejecución
         data = json.loads(event["body"])
+        userid = data["uid"]
         platform = data["platform"]
         boughtAt = data["boughtAt"]
         name = data["gameName"]
@@ -50,8 +51,9 @@ def handler(event, context):
         response = games_table.put_item(
             Item={
                 "id": game_id,
-                "platform": platform,
+                "uid": userid,                
                 "boughtAt": boughtAt,
+                "platform": platform,
                 "gname": name,
                 "description": description,
                 "image": file_name,

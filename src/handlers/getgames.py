@@ -1,7 +1,7 @@
 import json
 import boto3
 import os
-from src.handlers.utils import jsonify
+from src.handlers.utils import jsonify, create_presigned_urls
 
 BUCKET = os.environ["GAMES_BUCKET"]
 REGION = os.environ["REGION"]
@@ -18,25 +18,23 @@ def handler(event, context):
     status_code=200
     
     try:
-        scan_kwargs = {            
-            'ProjectionExpression': "platform, gname, description, timg"            
-        }
-        response = games_table.scan(**scan_kwargs)
+
+        uid = event.get('pathParameters', {}).get('uid')
+        
+        response = games_table.query(
+            KeyConditionExpression=Key("uid").eq(uid),
+            ProjectionExpression="platform, gname, description, timg",
+            ScanIndexForward=False            
+        )
+
         items = response.get('Items', [])
 
         j = 0
         for item in items:
-            url_item = item.get('timg')
-            url = s3_client.generate_presigned_url(
-                ClientMethod='get_object',
-                Params={
-                    'Bucket': BUCKET,
-                    'Key': url_item
-                }
-            )
+            url_timg = item.get('timg')
+            url = create_presigned_urls(s3_client, BUCKET, url_timg, 3600)
             items[j]["timg"] = url
             j = j + 1
-
 
     except Exception as e:
         msg_error = "An exception occurred " + str(e) + "."

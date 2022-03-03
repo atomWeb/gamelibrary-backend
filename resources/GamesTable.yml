@@ -6,7 +6,7 @@ GamesTable:
     AttributeDefinitions:
       - AttributeName: id
         AttributeType: S
-      - AttributeName: platform
+      - AttributeName: uid
         AttributeType: S
       - AttributeName: boughtAt
         AttributeType: S
@@ -14,9 +14,9 @@ GamesTable:
       - AttributeName: id
         KeyType: HASH
     GlobalSecondaryIndexes:
-      - IndexName: platformAndBoughtDate
+      - IndexName: userIdAndBoughtDate
         KeySchema:
-          - AttributeName: platform
+          - AttributeName: uid
             KeyType: HASH
           - AttributeName: boughtAt
             KeyType: RANGE

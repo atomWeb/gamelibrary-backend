@@ -42,15 +42,16 @@ functions:
     events:
       - http:
           method: GET
-          path: /games
+          path: /games/{uid}
           cors: true          
+          authorizer: ${self:custom.authorizer}
 
   getGame:
     handler: src/handlers/getgame.handler
     events:
       - http:
           method: GET
-          path: /game/{id}
+          path: /game/{gid}
           cors: true
           authorizer: ${self:custom.authorizer}
 
