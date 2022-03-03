@@ -1,5 +1,6 @@
 import json
 import boto3
+from boto3.dynamodb.conditions import Key
 import os
 from src.handlers.utils import jsonify, create_presigned_urls
 
