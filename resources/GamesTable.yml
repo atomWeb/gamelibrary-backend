@@ -13,6 +13,8 @@ GamesTable:
     KeySchema:
       - AttributeName: id
         KeyType: HASH
+      - AttributeName: uid
+        KeyType: RANGE
     GlobalSecondaryIndexes:
       - IndexName: userIdAndBoughtDate
         KeySchema:

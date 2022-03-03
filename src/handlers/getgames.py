@@ -1,6 +1,6 @@
 import json
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 import os
 from src.handlers.utils import jsonify, create_presigned_urls
 
@@ -17,25 +17,28 @@ def handler(event, context):
     print(event)
     jresp = {"data": ""}
     status_code=200
-    
+    items = []
+
     try:
 
         uid = event.get('pathParameters', {}).get('uid')
-        
-        response = games_table.query(
-            KeyConditionExpression=Key("uid").eq(uid),
-            ProjectionExpression="platform, gname, description, timg",
-            ScanIndexForward=False            
+        # fe = Attr('uid').eq(uid);
+        fe = Key('uid').eq(uid);
+        pe = "platform, gname, description, timg"
+
+        response = games_table.scan(
+            FilterExpression=fe,
+            ProjectionExpression=pe
         )
 
         items = response.get('Items', [])
-
-        j = 0
-        for item in items:
-            url_timg = item.get('timg')
-            url = create_presigned_urls(s3_client, BUCKET, url_timg, 3600)
-            items[j]["timg"] = url
-            j = j + 1
+        if items:
+            j = 0
+            for item in items:
+                url_timg = item.get('timg')
+                url = create_presigned_urls(s3_client, BUCKET, url_timg, 3600)
+                items[j]["timg"] = url
+                j = j + 1
 
     except Exception as e:
         msg_error = "An exception occurred " + str(e) + "."

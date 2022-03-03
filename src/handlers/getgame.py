@@ -17,6 +17,7 @@ def handler(event, context):
     print(event)
     jresp = {"data": ""}
     status_code=200
+    items = []
     
     try:
 
@@ -29,16 +30,16 @@ def handler(event, context):
         )
 
         items = response.get('Items', [])
-
-        j = 0
-        for item in items:
-            url_timg = item.get('timg')
-            timgps = create_presigned_urls(s3_client, BUCKET, url_timg, 3600)
-            items[j]["timg"] = timgps
-            url_image = item.get('image')
-            imageps = create_presigned_urls(s3_client, BUCKET, url_image, 3600)
-            items[j]["image"] = imageps            
-            j = j + 1
+        if items:
+            j = 0
+            for item in items:
+                url_timg = item.get('timg')
+                timgps = create_presigned_urls(s3_client, BUCKET, url_timg, 3600)
+                items[j]["timg"] = timgps
+                url_image = item.get('image')
+                imageps = create_presigned_urls(s3_client, BUCKET, url_image, 3600)
+                items[j]["image"] = imageps            
+                j = j + 1
 
 
     except Exception as e:
