@@ -1,6 +1,7 @@
 import json
 import boto3
-from boto3.dynamodb.conditions import Key, Attr
+# from boto3.dynamodb.conditions import Key, Attr
+from boto3.dynamodb.conditions import Key
 import os
 from src.handlers.utils import jsonify, create_presigned_urls
 
@@ -24,7 +25,7 @@ def handler(event, context):
         uid = event.get('pathParameters', {}).get('uid')
         # fe = Attr('uid').eq(uid);
         fe = Key('uid').eq(uid);
-        pe = "platform, gname, description, timg"
+        pe = "id, platform, gname, description, timg"
 
         response = games_table.scan(
             FilterExpression=fe,
